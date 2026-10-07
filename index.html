@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nassim Habbou - Portfolio Full-Stack</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            blue: '#00f0ff',
+                            purple: '#8a2be2',
+                        },
+                        dark: {
+                            900: '#0a0f1c',
+                            800: '#111827',
+                            700: '#1f2937',
+                        }
+                    },
+                    boxShadow: {
+                        'neon': '0 0 15px rgba(0, 240, 255, 0.5)',
+                        'neon-hover': '0 0 25px rgba(0, 240, 255, 0.8)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0a0f1c;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Scroll Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-left.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal-right.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Animated Background Elements */
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+            animation: moveBlob 10s infinite alternate;
+        }
+
+        @keyframes moveBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(20px, -30px) scale(1.1); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0f1c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #00f0ff, #8a2be2);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-neon-blue selection:text-dark-900">
+
+    
+    <div class="blob bg-neon-blue w-96 h-96 rounded-full top-0 left-[-10%]"></div>
+    <div class="blob bg-neon-purple w-96 h-96 rounded-full top-[40%] right-[-10%]"></div>
+
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-dark-900/80 backdrop-blur-md border-b border-white/5 py-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="#" class="font-display font-bold text-xl tracking-wider flex items-center gap-2">
+                <span class="text-neon-blue">&lt;/&gt;</span> N. Habbou
+            </a>
+            
+            
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#about" class="hover:text-neon-blue transition-colors">À propos</a>
+                <a href="#skills" class="hover:text-neon-blue transition-colors">Compétences</a>
+                <a href="#projects" class="hover:text-neon-blue transition-colors">Projets</a>
+                <a href="#goals" class="hover:text-neon-blue transition-colors">Objectifs</a>
+                <a href="#contact" onclick="openEmailModal(event)" class="px-5 py-2 rounded-full border border-neon-blue text-neon-blue hover:bg-neon-blue hover:text-dark-900 transition-all shadow-[0_0_10px_rgba(0,240,255,0.3)] hover:shadow-neon cursor-pointer">
+                    Me contacter
+                </a>
+            </div>
+
+            
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+
+        
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-dark-800 border-b border-white/10 flex-col py-4 px-6 space-y-4 shadow-xl">
+            <a href="#about" class="block hover:text-neon-blue">À propos</a>
+            <a href="#skills" class="block hover:text-neon-blue">Compétences</a>
+            <a href="#projects" class="block hover:text-neon-blue">Projets</a>
+            <a href="#goals" class="block hover:text-neon-blue">Objectifs</a>
+            <a href="#contact" onclick="openEmailModal(event)" class="inline-block text-center w-full px-5 py-2 rounded border border-neon-blue text-neon-blue hover:bg-neon-blue hover:text-dark-900 transition-all cursor-pointer">
+                Me contacter
+            </a>
+        </div>
+    </nav>
+
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="reveal">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-sm font-medium text-neon-blue mb-6">
+                    <i class="fas fa-rocket mr-2"></i> Disponible pour un stage de 8 à 10 semaines à partir du 8 février 2027
+                </div>
+                <h1 class="font-display text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+                    Bonjour, je suis <br/>
+                    <span class="text-gradient">Nassim Habbou</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-4 font-light">
+                    Étudiant en 2ème année de BUT Informatique à la Sorbonne Paris Nord.
+                </p>
+                <p class="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
+                    Passionné par l'innovation technologique. À la recherche d'un <strong class="text-gray-200 font-semibold">stage en développement Full-Stack</strong> pour février 2027.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#projects" class="px-8 py-3 rounded-full bg-neon-blue text-dark-900 font-bold hover:shadow-neon transition-all w-full sm:w-auto">
+                        Découvrir mes projets
+                    </a>
+                    <a href="#about" class="px-8 py-3 rounded-full border border-gray-600 hover:border-white hover:bg-white/5 transition-all w-full sm:w-auto">
+                        En savoir plus <i class="fas fa-arrow-down ml-2 animate-bounce"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-24 bg-dark-800/50 relative border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <!-- Text Content -->
+                <div class="reveal-left">
+                    <h2 class="font-display text-3xl md:text-4xl font-bold mb-6">
+                        Qui suis-je <span class="text-neon-blue">?</span>
+                    </h2>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Passionné par la <strong class="text-white">résolution de problèmes complexes</strong>, je trouve une immense stimulation intellectuelle dans l'analyse de défis et la conception d'architectures logiques. Mon but : aboutir à des solutions fonctionnelles et innovantes.
+                    </p>
+                    
+                    <h3 class="font-display text-xl font-semibold mb-4 text-gray-200 border-b border-white/10 pb-2">Mes Soft Skills</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-12 h-12 rounded-lg bg-dark-700 flex items-center justify-center text-neon-blue group-hover:bg-neon-blue group-hover:text-dark-900 transition-colors shrink-0">
+                                <i class="fas fa-medal text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-200">Régularité et persévérance</h4>
+                                <p class="text-sm text-gray-400">Pratiquant le judo à un niveau national, j'ai acquis une discipline de fer. Je n'abandonne jamais face à la difficulté, une qualité indispensable face aux bugs informatiques complexes.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 group">
+                            <div class="w-12 h-12 rounded-lg bg-dark-700 flex items-center justify-center text-neon-purple group-hover:bg-neon-purple group-hover:text-white transition-colors shrink-0">
+                                <i class="fas fa-briefcase text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-200">Autonomie et responsabilités</h4>
+                                <p class="text-sm text-gray-400">Fondateur de ma propre entreprise, je suis habitué à prendre des initiatives, résoudre des problèmes en autonomie et interagir professionnellement avec des clients.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Grid -->
+                <div class="reveal-right grid grid-cols-2 gap-4 relative">
+                    <!-- Glow behind images -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-neon-blue/20 to-neon-purple/20 blur-2xl z-0"></div>
+                    
+                    <div class="relative z-10 flex flex-col gap-4 pt-8">
+                        <img src="images/portrait.jfif" alt="Portrait Nassim" class="rounded-2xl border border-white/10 shadow-lg object-cover w-full h-64 grayscale hover:grayscale-0 transition-all duration-500">
+                    </div>
+                    <div class="relative z-10 flex flex-col gap-4">
+                        <img src="images/judo.jpg" alt="Judo Competition" class="rounded-2xl border border-white/10 shadow-lg object-cover w-full h-80 grayscale hover:grayscale-0 transition-all duration-500">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                    Expertise <span class="text-gradient">Full-Stack</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    La maîtrise du Front-End et du Back-End m'offre une indépendance totale pour transformer une idée abstraite en un outil concret et robuste.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Skill Card Template -->
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-neon-blue hover:shadow-neon transition-all duration-300 group text-center cursor-default hover:-translate-y-2">
+                    <i class="fab fa-php text-5xl text-gray-500 group-hover:text-[#777BB4] transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">PHP</h3>
+                    <p class="text-xs text-gray-500">Logique Serveur & API</p>
+                </div>
+
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-yellow-400 hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition-all duration-300 group text-center cursor-default hover:-translate-y-2" style="transition-delay: 100ms;">
+                    <i class="fab fa-js text-5xl text-gray-500 group-hover:text-[#F7DF1E] transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">JavaScript</h3>
+                    <p class="text-xs text-gray-500">Interactivité Front-End</p>
+                </div>
+
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-orange-500 hover:shadow-[0_0_15px_rgba(249,115,22,0.5)] transition-all duration-300 group text-center cursor-default hover:-translate-y-2" style="transition-delay: 200ms;">
+                    <i class="fab fa-html5 text-5xl text-gray-500 group-hover:text-[#E34F26] transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">HTML/CSS</h3>
+                    <p class="text-xs text-gray-500">Structure & Design</p>
+                </div>
+
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.5)] transition-all duration-300 group text-center cursor-default hover:-translate-y-2" style="transition-delay: 300ms;">
+                    <i class="fab fa-java text-5xl text-gray-500 group-hover:text-[#007396] transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">Java</h3>
+                    <p class="text-xs text-gray-500">Programmation Objet</p>
+                </div>
+
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-blue-400 hover:shadow-[0_0_15px_rgba(96,165,250,0.5)] transition-all duration-300 group text-center cursor-default hover:-translate-y-2" style="transition-delay: 400ms;">
+                    <i class="fas fa-database text-5xl text-gray-500 group-hover:text-[#336791] transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">PostgreSQL</h3>
+                    <p class="text-xs text-gray-500">Gestion de BDD</p>
+                </div>
+
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-blue-300 hover:shadow-[0_0_15px_rgba(147,197,253,0.5)] transition-all duration-300 group text-center cursor-default hover:-translate-y-2" style="transition-delay: 500ms;">
+                    <i class="fas fa-server text-5xl text-gray-500 group-hover:text-[#003545] transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">MariaDB</h3>
+                    <p class="text-xs text-gray-500">Bases relationnelles</p>
+                </div>
+
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-yellow-200 hover:shadow-[0_0_15px_rgba(253,230,138,0.5)] transition-all duration-300 group text-center cursor-default hover:-translate-y-2" style="transition-delay: 600ms;">
+                    <i class="fab fa-linux text-5xl text-gray-500 group-hover:text-white transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">Linux</h3>
+                    <p class="text-xs text-gray-500">Administration OS</p>
+                </div>
+
+                <div class="reveal bg-dark-800 border border-white/5 p-6 rounded-2xl hover:border-red-400 hover:shadow-[0_0_15px_rgba(248,113,113,0.5)] transition-all duration-300 group text-center cursor-default hover:-translate-y-2" style="transition-delay: 700ms;">
+                    <i class="fas fa-network-wired text-5xl text-gray-500 group-hover:text-[#D22128] transition-colors mb-4"></i>
+                    <h3 class="font-bold text-lg mb-1">Apache / LAMP</h3>
+                    <p class="text-xs text-gray-500">Déploiement Serveur</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-24 bg-dark-800/30 border-y border-white/5 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                    Réalisations & <span class="text-neon-blue">Projets</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    De la conception d'un besoin entrepreneurial à l'automatisation financière, en passant par les projets académiques.
+                </p>
+            </div>
+
+            <div class="space-y-20">
+                
+                <!-- Project 1 : Net'Auto60 (AVEC IFRAME INTÉGRÉE) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center reveal">
+                    <div class="order-2 lg:order-1 relative group h-[400px] lg:h-[500px]">
+                        <!-- Effet de lueur en arrière-plan -->
+                        <div class="absolute inset-0 bg-neon-blue/20 blur-xl rounded-2xl group-hover:bg-neon-blue/30 transition-all duration-500"></div>
+                        
+                        <!-- Fenêtre interactive (iframe) -->
+                        <iframe 
+                            src="http://netauto60.fr" 
+                            title="Site web Net'Auto60"
+                            class="relative z-10 rounded-2xl border border-white/10 shadow-2xl w-full h-full bg-white"
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <div class="text-neon-blue text-sm font-bold mb-2 tracking-wider uppercase">Projet Entrepreneurial</div>
+                        <h3 class="font-display text-3xl font-bold mb-4 text-white">Net'Auto60</h3>
+                        <p class="text-gray-400 mb-6">
+                            Fondateur de cette micro-entreprise de nettoyage automobile. J'ai entièrement conçu et développé le système informatique de réservation de A à Z.
+                            Interface client fluide et système d'arrière-plan sécurisé pour la réception instantanée des requêtes par email automatisé.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">HTML/CSS</span>
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">JavaScript</span>
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">PHP</span>
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">Java</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center reveal">
+                    <div class="order-1 lg:order-1">
+                        <div class="text-neon-purple text-sm font-bold mb-2 tracking-wider uppercase">Passion & Finance</div>
+                        <h3 class="font-display text-3xl font-bold mb-4 text-white">Trading du FOREX</h3>
+                        <p class="text-gray-400 mb-6">
+                            Fasciné par l'automatisation des stratégies, j'ai développé mes propres systèmes d'indicateurs pour la plateforme TradingView. 
+                            Le code devient un outil puissant pour analyser les marchés (ex: XAUUSD, BTCUSD) et prendre des décisions mathématiques et logiques.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">Pine Script</span>
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">Logique Algorithmique</span>
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">Analyse de données</span>
+                        </div>
+                    </div>
+                    <div class="order-2 lg:order-2 relative group">
+                        <div class="absolute inset-0 bg-neon-purple/20 blur-xl rounded-2xl group-hover:bg-neon-purple/30 transition-all duration-500"></div>
+                        <img src="images/chart_xauusd.jpg" alt="Trading Chart" class="relative z-10 rounded-2xl border border-white/10 shadow-2xl w-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Project 3 & 4 Grid -->
+                <!-- Project 3 : Académie SHAFX (NOUVELLE IFRAME AJOUTÉE ICI) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center reveal">
+                    <div class="order-2 lg:order-1 relative group h-[400px] lg:h-[500px]">
+                        <div class="absolute inset-0 bg-neon-purple/20 blur-xl rounded-2xl group-hover:bg-neon-purple/30 transition-all duration-500"></div>
+                        <iframe 
+                            src="https://academieshafx.netlify.app" 
+                            title="Académie SHAFX"
+                            class="relative z-10 rounded-2xl border border-white/10 shadow-2xl w-full h-full bg-dark-900"
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                    <div class="order-1 lg:order-2">
+                        <div class="text-neon-purple text-sm font-bold mb-2 tracking-wider uppercase">Plateforme Éducative & Trading</div>
+                        <h3 class="font-display text-3xl font-bold mb-4 text-white">Académie SHAFX</h3>
+                        <p class="text-gray-400 mb-6">
+                            Plateforme web dédiée à l'apprentissage et à la structuration des performances en trading. Conçue pour transmettre une vision axée sur la discipline, la longévité et la maîtrise du risque.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">Netlify</span>
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">Front-End</span>
+                            <span class="px-3 py-1 bg-dark-700 text-gray-300 rounded text-sm">Pédagogie Financière</span>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- SAÉ -->
+                    <div class="bg-dark-900 border border-white/5 rounded-2xl p-8 hover:border-gray-500 transition-colors">
+                        <i class="fas fa-users-cog text-3xl text-white mb-4"></i>
+                        <h3 class="font-bold text-xl mb-3">Projets Universitaires (SAÉ)</h3>
+                        <p class="text-gray-400 text-sm">
+                            Déploiement d'environnements LAMP, configuration de machines virtuelles Linux, gestion de bases PostgreSQL, et chefferie de projet utilisant les méthodes Agiles.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="goals" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="font-display text-3xl md:text-4xl font-bold mb-4">
+                    Vision & <span class="text-neon-purple">Objectifs</span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">
+                    Allier l'expertise technologique à mes ambitions entrepreneuriales.
+                </p>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Timeline Line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-px bg-white/10 hidden md:block"></div>
+
+                <div class="space-y-12">
+                    <!-- Court terme -->
+                    <div class="relative flex flex-col md:flex-row justify-between items-center w-full reveal-left">
+                        <div class="order-2 md:order-1 w-full md:w-5/12 p-6 bg-dark-800 border border-neon-blue/30 rounded-2xl shadow-[0_0_15px_rgba(0,240,255,0.1)] relative">
+                            <h3 class="font-bold text-xl text-neon-blue mb-2">Court terme (2026 - 2027)</h3>
+                            <p class="text-gray-400 text-sm">
+                                Valider ma première année avec des bases techniques solides. <strong>Décrocher un contrat d'apprentissage pour septembre 2026</strong> afin d'apprendre les normes de l'industrie (CI/CD, Git, équipe) de l'intérieur.
+                            </p>
+                        </div>
+                        <div class="order-1 md:order-2 z-10 w-8 h-8 bg-neon-blue rounded-full border-4 border-dark-900 shadow-neon mb-4 md:mb-0"></div>
+                        <div class="order-3 w-full md:w-5/12 hidden md:block"></div>
+                    </div>
+
+                    <!-- Long terme -->
+                    <div class="relative flex flex-col md:flex-row justify-between items-center w-full reveal-right">
+                        <div class="order-1 w-full md:w-5/12 hidden md:block"></div>
+                        <div class="order-1 md:order-2 z-10 w-8 h-8 bg-neon-purple rounded-full border-4 border-dark-900 shadow-[0_0_15px_rgba(138,43,226,0.8)] mb-4 md:mb-0"></div>
+                        <div class="order-2 md:order-3 w-full md:w-5/12 p-6 bg-dark-800 border border-neon-purple/30 rounded-2xl shadow-[0_0_15px_rgba(138,43,226,0.1)] relative">
+                            <h3 class="font-bold text-xl text-neon-purple mb-2">Long terme (5 à 10 ans)</h3>
+                            <p class="text-gray-400 text-sm">
+                                Devenir Leader Technique et Entrepreneur. Développer ma propre agence de trading. À terme, fusionner le monde de la finance et l'informatique en concevant des infrastructures logicielles pointues pour les marchés financiers avec ma marque <strong>SHAFX</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="bg-dark-900 py-12 border-t border-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+            <h2 class="font-display text-2xl font-bold mb-6">Prêt à collaborer ?</h2>
+            <p class="text-gray-400 text-center max-w-lg mb-8">
+                Je suis activement à la recherche d'un stage pour février 2027. Discutons de la manière dont je peux apporter mes compétences à votre équipe.
+            </p>
+            
+            <button onclick="openEmailModal(event)" class="px-8 py-3 rounded-full bg-white text-dark-900 font-bold hover:bg-gray-200 transition-colors mb-12 flex items-center gap-2 cursor-pointer">
+                <i class="fas fa-envelope"></i> Afficher mon email
+            </button>
+            
+            <div class="flex space-x-6 mb-8">
+    <!-- Bouton LinkedIn mis à jour -->
+    <a href="https://www.linkedin.com/in/habbou-nassim/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-dark-800 flex items-center justify-center text-gray-400 hover:text-[#0a66c2] hover:bg-white hover:shadow-[0_0_15px_rgba(10,102,194,0.5)] transition-all">
+        <i class="fab fa-linkedin-in"></i>
+    </a>
+    
+    <!-- Bouton GitHub (vous pouvez faire pareil ici) -->
+    <a href="https://github.com/VOTRE-PROFIL-ICI" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-dark-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all">
+        <i class="fab fa-github"></i>
+    </a>
+</div>
+            
+            <div class="text-gray-600 text-sm">
+                &copy; 2026 Nassim Habbou. Tous droits réservés.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fenêtre Modale Interactive pour l'Email -->
+    <div id="email-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-dark-800 border border-neon-blue/40 p-8 rounded-2xl shadow-[0_0_30px_rgba(0,240,255,0.2)] max-w-md w-full mx-4 transform scale-95 transition-transform duration-300 relative" id="modal-content">
+            <!-- Bouton Fermer -->
+            <button onclick="closeEmailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="text-center">
+                <div class="w-16 h-16 bg-neon-blue/10 text-neon-blue rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-[0_0_15px_rgba(0,240,255,0.2)]">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <h3 class="font-display text-2xl font-bold mb-2 text-white">Contactez-moi</h3>
+                <p class="text-gray-400 text-sm mb-6">Voici mon adresse email directe pour vos opportunités de stage :</p>
+                
+                <!-- Boîte de l'email avec bouton Copier -->
+                <div class="bg-dark-900 border border-white/10 rounded-xl p-4 flex items-center justify-between gap-2 mb-6">
+                    <span id="email-text" class="text-neon-blue font-mono font-semibold text-sm sm:text-base select-all">nhabbou7@gmail.com</span>
+                    <button onclick="copyEmail()" class="px-4 py-2 bg-neon-blue text-dark-900 font-bold rounded-lg hover:shadow-neon transition-all text-sm flex items-center gap-1 shrink-0">
+                        <i class="fas fa-copy" id="copy-icon"></i> <span id="copy-text">Copier</span>
+                    </button>
+                </div>
+
+                <p id="copy-feedback" class="text-xs text-green-400 h-4 opacity-0 transition-opacity">Email copié dans le presse-papier !</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fonctions d'interactivité pour l'affichage de l'email
+        function openEmailModal(e) {
+            if(e) e.preventDefault();
+            const modal = document.getElementById('email-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeEmailModal() {
+            const modal = document.getElementById('email-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function copyEmail() {
+            const email = "nhabbou7@gmail.com";
+            navigator.clipboard.writeText(email).then(() => {
+                const feedback = document.getElementById('copy-feedback');
+                const copyText = document.getElementById('copy-text');
+                const copyIcon = document.getElementById('copy-icon');
+                
+                copyText.textContent = "Copié !";
+                copyIcon.className = "fas fa-check";
+                feedback.style.opacity = "1";
+                
+                setTimeout(() => {
+                    copyText.textContent = "Copier";
+                    copyIcon.className = "fas fa-copy";
+                    feedback.style.opacity = "0";
+                }, 2000);
+            });
+        }
+
+        // Fermer la modale si on clique en dehors de la boîte
+        window.addEventListener('click', (e) => {
+            const modal = document.getElementById('email-modal');
+            if (e.target === modal) {
+                closeEmailModal();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Mobile Menu Toggle
+            const btn = document.getElementById('mobile-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('flex');
+            });
+
+            // Close mobile menu on link click
+            const mobileLinks = menu.querySelectorAll('#mobile-menu a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                    menu.classList.remove('flex');
+                });
+            });
+
+            // 2. Sticky Navbar Background on Scroll
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('shadow-lg', 'bg-dark-900/95');
+                    navbar.classList.remove('bg-dark-900/80');
+                } else {
+                    navbar.classList.remove('shadow-lg', 'bg-dark-900/95');
+                    navbar.classList.add('bg-dark-900/80');
+                }
+            });
+
+            // 3. Scroll Animations using IntersectionObserver
+            const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+            
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Trigger only once
+                });
+            }, revealOptions);
+
+            revealElements.forEach(el => {
+                revealOnScroll.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
